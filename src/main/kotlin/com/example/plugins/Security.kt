@@ -12,12 +12,12 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
 fun Application.configureSecurity(config : TokenConfig) {
-    data class MySession(val count: Int = 0)
-    install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
-            cookie.extensions["SameSite"] = "lax"
-        }
-    }
+//    data class MySession(val count: Int = 0)
+//    install(Sessions) {
+//        cookie<MySession>("MY_SESSION") {
+//            cookie.extensions["SameSite"] = "lax"
+//        }
+//    }
     authentication {
         jwt {
             realm = this@configureSecurity.environment.config.property("jwt.realm").getString()

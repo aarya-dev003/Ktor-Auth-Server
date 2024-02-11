@@ -35,12 +35,16 @@ fun Route.signUp(
             return@post
         }
 
-        val saltedHash = hashingService.generateSaltedHash(request.password)
+        val saltedHash = hashingService.generateSaltedHash(value = request.password)
         val user = User(
             userName = request.username,
             password = saltedHash.hash,
             salt = saltedHash.salt
         )
+        println("Generated salt: ${saltedHash.salt}")
+        println("Generated password hash: ${saltedHash.hash}")
+        println("Entered password: ${request.password}")
+
         val wasAcknowledged = userDataSource.insertUser(user)
         if(!wasAcknowledged)  {
             call.respond(HttpStatusCode.Conflict)
@@ -63,7 +67,7 @@ fun Route.signIn(
             return@post
         }
 
-        val user = userDataSource.getUserbyName(request.username)
+        val user : User? = userDataSource.getUserbyName(request.username)
         if(user == null) {
             call.respond(HttpStatusCode.Conflict, "Incorrect username or password")
             return@post
@@ -76,9 +80,14 @@ fun Route.signIn(
                 salt = user.salt
             )
         )
+        println("Input password: ${request.password}")
+        println("Stored password hash: ${user.password}")
+        println("Stored salt: ${user.salt}")
+        println("Is password valid: $isValidPassword")
+
         if(!isValidPassword) {
             println("Entered hash: ${DigestUtils.sha256Hex("${user.salt}${request.password}")}, Hashed PW: ${user.password}")
-            call.respond(HttpStatusCode.Conflict, "Incorrect username or password")
+            call.respond(HttpStatusCode.Conflict, "Incorrect username or password from isValid")
             return@post
         }
 

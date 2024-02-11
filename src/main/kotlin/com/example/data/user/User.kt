@@ -9,3 +9,5 @@ data class User(
     val salt : String,
     @BsonId val id : ObjectId = ObjectId()
 )
+
+
