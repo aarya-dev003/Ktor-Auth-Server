@@ -39,6 +39,7 @@ fun Route.signUp(
         val user = User(
             userName = request.username,
             password = saltedHash.hash,
+            email = request.email,
             salt = saltedHash.salt
         )
         println("Generated salt: ${saltedHash.salt}")
