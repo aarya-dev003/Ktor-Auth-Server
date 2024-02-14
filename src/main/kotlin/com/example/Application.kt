@@ -1,5 +1,8 @@
 package com.example
 
+import com.example.crudData.UserData
+import com.example.data.emissionData.UserEmissionDataSource
+import com.example.data.emissionData.UserEmissionDataSourceImpl
 import com.example.data.user.MongoUserDataSource
 import com.example.data.user.User
 import com.example.data.user.UserDataSource
@@ -25,6 +28,11 @@ fun Application.module() {
     ).coroutine
         .getDatabase(dbName)
 
+    val database = db.getCollection<UserData>()
+
+    val  userEmissionDataSource = UserEmissionDataSourceImpl(db)
+
+    val userEmissionData = UserEmissionDataSourceImpl(db)
     val userDataSource = MongoUserDataSource(db)
     val tokenService = JwtTokenService()
     val tokenConfig = TokenConfig(
@@ -48,5 +56,5 @@ fun Application.module() {
     configureSerialization()
     configureMonitoring()
     configureSecurity(tokenConfig)
-    configureRouting(userDataSource , hashingService, tokenService , tokenConfig)
+    configureRouting(userDataSource , hashingService, tokenService , tokenConfig, userEmissionData)
 }
